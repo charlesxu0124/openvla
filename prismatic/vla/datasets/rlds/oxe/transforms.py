@@ -885,6 +885,7 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "berkeley_gnm_sac_son": gnm_dataset_transform,
     "droid": droid_baseact_transform,
     "fmb_dataset": fmb_dataset_transform,
+    "fmb_grasp_dataset": fmb_dataset_transform,
     "dobbe": dobbe_dataset_transform,
     "roboset": roboset_dataset_transform,
     "rh20t": rh20t_dataset_transform,

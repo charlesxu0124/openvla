@@ -141,7 +141,7 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
         ("fractal20220817_data", 1.0),                          # Google RT-1 Robot Data (Large-Scale)
         ("kuka", 0.8341046294),
         ("bridge_orig", 1.0),                                   # Original Version of Bridge V2 from Project Website
-        ("taco_play", 2.0),
+        # ("taco_play", 2.0),
         ("jaco_play", 1.0),
         ("berkeley_cable_routing", 1.0),
         ("roboturk", 2.0),
@@ -164,7 +164,8 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
         ## New Datasets in MagicSoup++
         ("bc_z", 0.2),                                          # Note: use v0.1.0 --> later versions broken
         ("fmb_dataset", 1.0),
-        ("dobbe", 0.2),
+        ("fmb_grasp_dataset", 100.0),
+        # ("dobbe", 0.2),
         # ("droid", 0.06),
     ],
 

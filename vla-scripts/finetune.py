@@ -72,8 +72,10 @@ class FinetuneConfig:
     vla_path: str = "openvla/openvla-7b"                            # Path to OpenVLA model (on HuggingFace Hub)
 
     # Directory Paths
-    data_root_dir: Path = Path("/home/charlesxu/fmb_dataset")        # Path to Open-X dataset directory
-    dataset_name: str = "fmb_grasp_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    data_root_dir: Path = Path("/shared/karl/data")        # Path to Open-X dataset directory
+    # dataset_name: str = "fmb_grasp_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    dataset_name: str = "oxe_magic_soup_plus_minus"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    
     run_root_dir: Path = Path("runs")                               # Path to directory to store logs & checkpoints
     adapter_tmp_dir: Path = Path("adapter-tmp")                     # Temporary directory for LoRA weights before fusing
 
@@ -83,7 +85,7 @@ class FinetuneConfig:
     save_steps: int = 5000                                          # Interval for checkpoint saving
     learning_rate: float = 2e-5                                     # Fine-tuning learning rate
     grad_accumulation_steps: int = 1                                # Gradient accumulation steps
-    image_aug: bool = False                                          # Whether to train with image augmentations
+    image_aug: bool = True                                          # Whether to train with image augmentations
     shuffle_buffer_size: int = 100_000                              # Dataloader shuffle buffer size (can reduce if OOM)
 
     # LoRA Arguments
@@ -227,7 +229,7 @@ def finetune(cfg: FinetuneConfig) -> None:
         optimizer.zero_grad()
         data_sampling_start = time.time()
         for step_idx, batch in enumerate(dataloader):
-            print(f"data sampling time: {time.time() - data_sampling_start}")
+            # print(f"data sampling time: {time.time() - data_sampling_start}")
             
             train_start = time.time()
             with torch.autocast("cuda", dtype=torch.bfloat16):
@@ -241,7 +243,7 @@ def finetune(cfg: FinetuneConfig) -> None:
 
             # Backward!
             loss.backward()
-            print(f"train time: {time.time() - train_start}")
+            # print(f"train time: {time.time() - train_start}")
 
             # Compute Accuracy and L1 Loss for Logging
             action_logits = output.logits[:, vla.module.vision_backbone.featurizer.patch_embed.num_patches : -1]

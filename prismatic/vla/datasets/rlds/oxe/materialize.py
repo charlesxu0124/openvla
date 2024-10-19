@@ -112,30 +112,30 @@ def get_oxe_dataset_kwargs_and_weights(
     per_dataset_kwargs, sampling_weights = [], []
     for d_name, d_weight in filtered_mixture_spec:
         try:
-            if d_name == "fmb_grasp_dataset":
-                per_dataset_kwargs.append(
-                    make_oxe_dataset_kwargs(
-                        d_name,
-                        "/scratch/partial_datasets/charlesxu/fmb_datasets",
-                        load_camera_views,
-                        load_depth,
-                        load_proprio,
-                        load_language,
-                        action_proprio_normalization_type,
-                    )
+            # if d_name == "fmb_grasp_dataset":
+            #     per_dataset_kwargs.append(
+            #         make_oxe_dataset_kwargs(
+            #             d_name,
+            #             "/scratch/partial_datasets/charlesxu/fmb_datasets",
+            #             load_camera_views,
+            #             load_depth,
+            #             load_proprio,
+            #             load_language,
+            #             action_proprio_normalization_type,
+            #         )
+            #     )
+            # else:
+            per_dataset_kwargs.append(
+                make_oxe_dataset_kwargs(
+                    d_name,
+                    data_root_dir,
+                    load_camera_views,
+                    load_depth,
+                    load_proprio,
+                    load_language,
+                    action_proprio_normalization_type,
                 )
-            else:
-                per_dataset_kwargs.append(
-                    make_oxe_dataset_kwargs(
-                        d_name,
-                        data_root_dir,
-                        load_camera_views,
-                        load_depth,
-                        load_proprio,
-                        load_language,
-                        action_proprio_normalization_type,
-                    )
-                )
+            )
             sampling_weights.append(d_weight)
 
         except ValueError as e:

@@ -17,6 +17,7 @@ Transforms adopt the following structure:
 
 from typing import Any, Dict
 
+import numpy as np
 import tensorflow as tf
 
 from prismatic.vla.datasets.rlds.oxe.utils.droid_utils import droid_baseact_transform, droid_finetuning_transform
@@ -768,6 +769,20 @@ def fmb_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     )
     return trajectory
 
+def fmb_rl_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
+    trajectory["observation"]["proprio"] = np.zeros((7))
+    trajectory["action"] = trajectory["eef_action"]
+    return trajectory
+
+def connector_insert_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
+    trajectory["action"] = trajectory["eef_action"]
+    trajectory["observation"]["proprio"] = np.zeros((7))
+    return trajectory
+
+def rl_place_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
+    trajectory["observation"]["proprio"] = np.zeros((7))
+    trajectory["action"] = trajectory["base_action"]
+    return trajectory
 
 def dobbe_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     # every input feature is batched, ie has leading batch dimension
@@ -886,6 +901,18 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "droid": droid_baseact_transform,
     "fmb_dataset": fmb_dataset_transform,
     "fmb_grasp_dataset": fmb_dataset_transform,
+    "fmb_human_insert_dataset": fmb_rl_transform,
+    "fmb_rl_insert_dataset": fmb_rl_transform,
+    "fmb_bc_insert_dataset": fmb_rl_transform,
+    "fmb75_dslsr_insert_dataset": fmb_dataset_transform,
+    "fmb_single_object_insert_dataset": fmb_dataset_transform,
+    "fmb_grasp_dataset:1.0.0": fmb_dataset_transform,
+    "usb_insert_human_dataset": connector_insert_transform,
+    "vga_insert_human_dataset": connector_insert_transform,
+    "vga_insert_rl_dataset": connector_insert_transform,
+    "human_hexagon_place_dataset": rl_place_transform,
+    "rl_hexagon_place_dataset": rl_place_transform,
+    "rl_hexagon_place_dataset:1.0.0": rl_place_transform,
     "dobbe": dobbe_dataset_transform,
     "roboset": roboset_dataset_transform,
     "rh20t": rh20t_dataset_transform,

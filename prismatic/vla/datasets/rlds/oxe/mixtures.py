@@ -193,5 +193,11 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
     "droid_wipe": [
         ("droid_wipe", 1.0),
     ],
+    
+    # === FMB Finetuning Datasets ===
+    "fmb_rl_insert_cofinetune": [
+        ("fmb_rl_insert_dataset", 40.0),
+        ("fmb_single_object_insert_dataset", 1.0)
+    ],
 }
 # fmt: on

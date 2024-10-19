@@ -23,7 +23,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 import time
-
+import numpy as np
 import draccus
 import torch
 import torch.distributed as dist
@@ -70,21 +70,24 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 class FinetuneConfig:
     # fmt: off
     vla_path: str = "openvla/openvla-7b"                            # Path to OpenVLA model (on HuggingFace Hub)
-
+    # vla_path: str = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_rl_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-125000"
     # Directory Paths
-    data_root_dir: Path = Path("/shared/karl/data")        # Path to Open-X dataset directory
-    # dataset_name: str = "fmb_grasp_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
-    dataset_name: str = "oxe_magic_soup_plus_minus"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    data_root_dir: Path = Path("/media/nvmep3p_2/rlds")        # Path to Open-X dataset directory
+    dataset_name: str = "vga_insert_human_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    # dataset_name: str = "fmb_human_insert_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    # dataset_name: str = "fmb75_dslsr_insert_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    # dataset_name: str = "human_hexagon_place_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    # dataset_name: str = "oxe_magic_soup_plus_minus"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     
-    run_root_dir: Path = Path("runs")                               # Path to directory to store logs & checkpoints
-    adapter_tmp_dir: Path = Path("adapter-tmp")                     # Temporary directory for LoRA weights before fusing
+    run_root_dir: Path = Path("/media/nvmep3p/openvla_checkpoints")                               # Path to directory to store logs & checkpoints
+    adapter_tmp_dir: Path = Path("/media/nvmep3p/openvla_checkpoints/adapter-tmp")                     # Temporary directory for LoRA weights before fusing
 
     # Fine-tuning Parameters
-    batch_size: int = 16                                            # Fine-tuning batch size
-    max_steps: int = 200_000                                        # Max number of fine-tuning steps
-    save_steps: int = 5000                                          # Interval for checkpoint saving
+    batch_size: int = 2                                            # Fine-tuning batch size
+    max_steps: int = 50_000                                        # Max number of fine-tuning steps
+    save_steps: int = 25_000                                         # Interval for checkpoint saving
     learning_rate: float = 2e-5                                     # Fine-tuning learning rate
-    grad_accumulation_steps: int = 1                                # Gradient accumulation steps
+    grad_accumulation_steps: int = 2                                # Gradient accumulation steps
     image_aug: bool = True                                          # Whether to train with image augmentations
     shuffle_buffer_size: int = 100_000                              # Dataloader shuffle buffer size (can reduce if OOM)
 
@@ -96,7 +99,7 @@ class FinetuneConfig:
                                                                     #   => CAUTION: Reduces memory but hurts performance
 
     # Tracking Parameters
-    wandb_project: str = "fmb_grasp"                                  # Name of W&B project to log to (use default!)
+    wandb_project: str = "vla_connector_insert"                     # Name of W&B project to log to (use default!)
     wandb_entity: str = "charlesxu0124"                          # Name of entity to log under
 
     # fmt: on
@@ -122,9 +125,11 @@ def finetune(cfg: FinetuneConfig) -> None:
         exp_id += f"+lora-r{cfg.lora_rank}+dropout-{cfg.lora_dropout}"
     if cfg.use_quantization:
         exp_id += "+q-4bit"
+    exp_id += "+wrist_1_100_traj"
 
     # Start =>> Build Directories
     run_dir, adapter_dir = cfg.run_root_dir / exp_id, cfg.adapter_tmp_dir / exp_id
+    assert not os.path.exists(run_dir), "Run directory already exists!"
     os.makedirs(run_dir, exist_ok=True)
 
     # Quantization Config =>> only if LoRA fine-tuning
@@ -224,14 +229,10 @@ def finetune(cfg: FinetuneConfig) -> None:
         wandb.init(entity=cfg.wandb_entity, project=cfg.wandb_project, name=f"ft+{exp_id}")
 
     # Train!
-    with tqdm.tqdm(total=cfg.max_steps, leave=False) as progress:
+    with tqdm.tqdm(total=cfg.max_steps, leave=True) as progress:
         vla.train()
         optimizer.zero_grad()
-        data_sampling_start = time.time()
         for step_idx, batch in enumerate(dataloader):
-            # print(f"data sampling time: {time.time() - data_sampling_start}")
-            
-            train_start = time.time()
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 output: CausalLMOutputWithPast = vla(
                     input_ids=batch["input_ids"].to(device_id),
@@ -277,15 +278,19 @@ def finetune(cfg: FinetuneConfig) -> None:
 
             # Save Model Checkpoint =>> by default, only keeps the latest checkpoint, continually overwriting it!
             if step_idx > 0 and step_idx % cfg.save_steps == 0:
+                adapter_dir_step = adapter_dir / f"step-{step_idx}"
+                run_dir_step = run_dir / f"step-{step_idx}"
                 if distributed_state.is_main_process:
                     print(f"Saving Model Checkpoint for Step {step_idx}")
 
                     # If LoRA, we first save adapter weights, then merge into full model; otherwise, default save!
                     save_dir = adapter_dir if cfg.use_lora else run_dir
 
+                    save_dir_step = save_dir / f"step-{step_idx}"
+
                     # Save Processor & Weights
-                    processor.save_pretrained(run_dir)
-                    vla.module.save_pretrained(save_dir)
+                    processor.save_pretrained(run_dir_step)
+                    vla.module.save_pretrained(save_dir_step)
 
                 # Merge LoRA weights into model backbone for faster inference
                 #   =>> Note that merging is slow and can be done post-hoc to speed up training
@@ -293,14 +298,13 @@ def finetune(cfg: FinetuneConfig) -> None:
                     base_vla = AutoModelForVision2Seq.from_pretrained(
                         cfg.vla_path, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True, trust_remote_code=True
                     )
-                    merged_vla = PeftModel.from_pretrained(base_vla, adapter_dir)
+                    merged_vla = PeftModel.from_pretrained(base_vla, adapter_dir_step)
                     merged_vla = merged_vla.merge_and_unload()
                     if distributed_state.is_main_process:
-                        merged_vla.save_pretrained(run_dir)
+                        merged_vla.save_pretrained(run_dir_step)
 
                 # Block on Main Process Checkpointing
                 dist.barrier()
-        data_sampling_start = time.time()
 
 
 

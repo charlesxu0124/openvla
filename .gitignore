@@ -147,3 +147,9 @@ dmypy.json
 # Caches and Datasets
 cache/
 data/
+runs/
+adapter-tmp/
+wandb/
+*.pkl
+*.json
+*.npy

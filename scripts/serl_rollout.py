@@ -50,7 +50,7 @@ def rollout(
 def main(_):
     # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+fmb75_dslsr_insert_dataset+b2+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-200000"
     # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_human_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-125000"
-    checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_rl_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-50000"
+    checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_rl_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1_100_traj/step-50000"
     # checkpoint_path = "openvla/openvla-7b"
 
     # Load Processor & VLA

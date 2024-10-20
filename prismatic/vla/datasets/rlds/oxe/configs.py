@@ -621,6 +621,66 @@ OXE_DATASET_CONFIGS = {
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
+    "ethernet_insert_human_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "ethernet_insert_rl_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "usba_insert_human_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "usba_insert_rl_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
     "human_hexagon_place_dataset": {
         "image_obs_keys": {
             "primary": "image_side",

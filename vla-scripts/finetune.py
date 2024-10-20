@@ -73,7 +73,8 @@ class FinetuneConfig:
     # vla_path: str = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_rl_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-125000"
     # Directory Paths
     data_root_dir: Path = Path("/media/nvmep3p_2/rlds")        # Path to Open-X dataset directory
-    dataset_name: str = "vga_insert_human_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    dataset_name: str = "connector_insert_rl_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    # dataset_name: str = "vga_insert_human_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     # dataset_name: str = "fmb_human_insert_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     # dataset_name: str = "fmb75_dslsr_insert_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     # dataset_name: str = "human_hexagon_place_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
@@ -87,7 +88,7 @@ class FinetuneConfig:
     max_steps: int = 50_000                                        # Max number of fine-tuning steps
     save_steps: int = 25_000                                         # Interval for checkpoint saving
     learning_rate: float = 2e-5                                     # Fine-tuning learning rate
-    grad_accumulation_steps: int = 2                                # Gradient accumulation steps
+    grad_accumulation_steps: int = 3                                # Gradient accumulation steps
     image_aug: bool = True                                          # Whether to train with image augmentations
     shuffle_buffer_size: int = 100_000                              # Dataloader shuffle buffer size (can reduce if OOM)
 
@@ -125,7 +126,7 @@ def finetune(cfg: FinetuneConfig) -> None:
         exp_id += f"+lora-r{cfg.lora_rank}+dropout-{cfg.lora_dropout}"
     if cfg.use_quantization:
         exp_id += "+q-4bit"
-    exp_id += "+wrist_1_100_traj"
+    exp_id += "+wrist_1_150_traj"
 
     # Start =>> Build Directories
     run_dir, adapter_dir = cfg.run_root_dir / exp_id, cfg.adapter_tmp_dir / exp_id

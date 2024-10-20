@@ -199,5 +199,17 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
         ("fmb_rl_insert_dataset", 40.0),
         ("fmb_single_object_insert_dataset", 1.0)
     ],
+    
+    "connector_insert_rl_dataset": [
+        ("vga_insert_rl_dataset", 1.0),
+        ("usba_insert_rl_dataset", 1.0),
+        ("ethernet_insert_rl_dataset", 1.0),
+    ],
+    
+    "connector_insert_human_dataset": [
+        ("vga_insert_human_dataset", 1.0),
+        ("usba_insert_human_dataset", 1.0),
+        ("ethernet_insert_human_dataset", 1.0),
+    ],
 }
 # fmt: on

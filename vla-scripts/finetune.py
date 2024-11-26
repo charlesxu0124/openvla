@@ -73,9 +73,10 @@ class FinetuneConfig:
     # vla_path: str = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_rl_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-125000"
     # Directory Paths
     data_root_dir: Path = Path("/media/nvmep3p_2/rlds")        # Path to Open-X dataset directory
-    dataset_name: str = "connector_insert_rl_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    # dataset_name: str = "cucumber_pick_place_rl_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     # dataset_name: str = "vga_insert_human_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
-    # dataset_name: str = "fmb_human_insert_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    # dataset_name: str = "fmb_rl_composition_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    dataset_name: str = "fmb75_relabel_human_insert_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     # dataset_name: str = "fmb75_dslsr_insert_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     # dataset_name: str = "human_hexagon_place_dataset"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
     # dataset_name: str = "oxe_magic_soup_plus_minus"                               # Name of fine-tuning dataset (e.g., `droid_wipe`)
@@ -85,10 +86,10 @@ class FinetuneConfig:
 
     # Fine-tuning Parameters
     batch_size: int = 2                                            # Fine-tuning batch size
-    max_steps: int = 50_000                                        # Max number of fine-tuning steps
+    max_steps: int = 200_000                                        # Max number of fine-tuning steps
     save_steps: int = 25_000                                         # Interval for checkpoint saving
     learning_rate: float = 2e-5                                     # Fine-tuning learning rate
-    grad_accumulation_steps: int = 3                                # Gradient accumulation steps
+    grad_accumulation_steps: int = 1                                # Gradient accumulation steps
     image_aug: bool = True                                          # Whether to train with image augmentations
     shuffle_buffer_size: int = 100_000                              # Dataloader shuffle buffer size (can reduce if OOM)
 
@@ -100,7 +101,7 @@ class FinetuneConfig:
                                                                     #   => CAUTION: Reduces memory but hurts performance
 
     # Tracking Parameters
-    wandb_project: str = "vla_connector_insert"                     # Name of W&B project to log to (use default!)
+    wandb_project: str = "fmb_insert_analysis"                     # Name of W&B project to log to (use default!)
     wandb_entity: str = "charlesxu0124"                          # Name of entity to log under
 
     # fmt: on
@@ -126,7 +127,7 @@ def finetune(cfg: FinetuneConfig) -> None:
         exp_id += f"+lora-r{cfg.lora_rank}+dropout-{cfg.lora_dropout}"
     if cfg.use_quantization:
         exp_id += "+q-4bit"
-    exp_id += "+wrist_1_150_traj"
+    exp_id += "+wrist"
 
     # Start =>> Build Directories
     run_dir, adapter_dir = cfg.run_root_dir / exp_id, cfg.adapter_tmp_dir / exp_id
@@ -268,9 +269,12 @@ def finetune(cfg: FinetuneConfig) -> None:
 
             # Push Metrics to W&B (every 10 steps)
             if distributed_state.is_main_process and step_idx % 10 == 0:
-                wandb.log(
-                    {"train_loss": loss, "action_accuracy": action_accuracy, "l1_loss": action_l1_loss}, step=step_idx
-                )
+                try:
+                    wandb.log(
+                        {"train_loss": loss, "action_accuracy": action_accuracy, "l1_loss": action_l1_loss}, step=step_idx
+                    )
+                except Exception as e:
+                    print(f"Error logging to W&B: {e}")
 
             # Optimizer Step
             if (step_idx + 1) % cfg.grad_accumulation_steps == 0:

@@ -741,6 +741,216 @@ OXE_DATASET_CONFIGS = {
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
+    "fmb300_rl_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb150_rl_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb75_rl_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb25_rl_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb300_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb150_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb75_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb50_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb25_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb300_relabel_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb150_relabel_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb75_relabel_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },  
+    "fmb50_relabel_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb25_relabel_human_insert_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
     "fmb_bc_insert_dataset": {
         "image_obs_keys": {
             "primary": "image_wrist_1",
@@ -759,6 +969,81 @@ OXE_DATASET_CONFIGS = {
     "fmb_human_insert_dataset": {
         "image_obs_keys": {
             "primary": "image_wrist_1",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "cucumber_pick_place_rl_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_2",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "pepper_pick_place_human_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_2",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb_rl_composition_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_2",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "fmb_human_composition_dataset": {
+        "image_obs_keys": {
+            "primary": "image_wrist_2",
+            "secondary": "image_side_2",
+            "wrist": "image_wrist_1",
+        },
+        "depth_obs_keys": {
+            "primary": "image_side_1_depth",
+            "secondary": "image_side_2_depth",
+            "wrist": "image_wrist_1_depth",
+        },
+        "state_obs_keys": ["proprio"],
+        "state_encoding": StateEncoding.POS_EULER,
+        "action_encoding": ActionEncoding.EEF_POS,
+    },
+    "pepper_pick_place_rl_dataset": {
+        "image_obs_keys": {
+            "primary": "image_side",
             "secondary": "image_side_2",
             "wrist": "image_wrist_1",
         },

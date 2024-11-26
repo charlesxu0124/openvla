@@ -1,19 +1,15 @@
 import json
 import os
 from pathlib import Path
-import pickle
 import time
-import cv2
-import gymnasium as gym
 import numpy as np
 from transformers import AutoModelForVision2Seq, AutoProcessor
 from PIL import Image
-from franka_env.envs.franka_fmb_env import DefaultFMBEnvConfig
-import franka_env
-from serl_experiments import config
 # from serl_experiments.mappings import CONFIG_MAPPING
 from serl_experiments.connector_insert.config import TrainConfig as ConnectorInsertTrainConfig
-from serl_experiments.vla_place.config import TrainConfig as VLAPlaceTrainConfig
+from serl_experiments.vla_place.config import TrainConfig as PickPlaceConfig
+from serl_experiments.fmb_insert.config import TrainConfig as InsertConfig
+from serl_experiments.fmb_grasp_move.config import TrainConfig as FMBConfig 
 
 import torch
 import absl.app
@@ -27,16 +23,15 @@ def rollout(
 ):
     observations = []
     actions = []
-    path_length = 0
     o, _ = env.reset()
-    while path_length < max_path_length:
+    for _ in range(max_path_length):
         # Get action from policy
         a = agent(o)
-        # print(a[-1])
         next_o, rew, done, truncated, info = env.step(a)
+        rew = int(info['original_state_obs']['tcp_pose'][2] < 0.11)
+        done = done or rew
         observations.append(o)
         actions.append(a)
-        path_length += 1
         o = next_o
         if done:
             print("Reward: ", rew)
@@ -50,7 +45,11 @@ def rollout(
 def main(_):
     # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+fmb75_dslsr_insert_dataset+b2+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-200000"
     # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_human_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1/step-125000"
-    checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+vga_insert_rl_dataset+b4+lr-2e-05+lora-r32+dropout-0.0+wrist_1_100_traj/step-50000"
+    # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+connector_insert_human_dataset+b6+lr-2e-05+lora-r32+dropout-0.0+wrist_1_45_traj/step-25000"
+    # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+cucumber_pick_place_rl_dataset+b6+lr-2e-05+lora-r32+dropout-0.0+wrist_50_traj/step-200000"
+    # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+pepper_pick_place_human_dataset+b6+lr-2e-05+lora-r32+dropout-0.0+wrist_50_traj/step-200000"
+    # checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+fmb_human_composition_dataset+b6+lr-2e-05+lora-r32+dropout-0.0+wrist_75_relabeled_human_traj/step-200000"
+    checkpoint_path = "/media/nvmep3p/openvla_checkpoints/openvla-7b+fmb25_human_insert_dataset+b2+lr-2e-05+lora-r32+dropout-0.0+wrist/step-50000"
     # checkpoint_path = "openvla/openvla-7b"
 
     # Load Processor & VLA
@@ -64,22 +63,23 @@ def main(_):
     ).to("cuda:0")
 
     if os.path.isdir(checkpoint_path):
-        with open(Path(checkpoint_path) / "dataset_statistics.json", "r") as f:
+        with open(Path(checkpoint_path).parent / "dataset_statistics.json", "r") as f:
             vla.norm_stats = json.load(f)
 
     def policy(obs):
         # Grab image input & format prompt
         image = obs["wrist_1"][0]
-        prompt = "In: What action should the robot take to insert the VGA connector?"
+        prompt = "In: What action should the robot take to insert the double square object? "
         # Predict Action (7-DoF; un-normalize for FMB)``
         image: Image.Image = Image.fromarray(image)
         inputs = processor(prompt, image).to("cuda:0", dtype=torch.bfloat16)
 
-        action = vla.predict_action(**inputs, unnorm_key="vga_insert_rl_dataset", do_sample=True)
+        action = vla.predict_action(**inputs, unnorm_key="fmb25_human_insert_dataset", do_sample=True)
+        # action = vla.predict_action(**inputs, unnorm_key="cucumber_pick_place_rl_dataset", do_sample=True)
         action = action[:6]
         return action
 
-    config = ConnectorInsertTrainConfig()
+    config = InsertConfig()
     env = config.get_environment(
         fake_env=False,
         save_video=False,
@@ -92,9 +92,9 @@ def main(_):
 
     success_count = 0
     cycle_times = []
-    for n in range(20):
+    for n in range(30):
         start_time = time.time()
-        _, rew = rollout(env, policy, max_path_length=50)
+        _, rew = rollout(env, policy, max_path_length=200)
         finish_time = time.time()
         if rew:
             cycle_times.append(finish_time - start_time)

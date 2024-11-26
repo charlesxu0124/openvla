@@ -771,7 +771,7 @@ def fmb_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
 
 def fmb_rl_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     trajectory["observation"]["proprio"] = np.zeros((7))
-    trajectory["action"] = trajectory["eef_action"]
+    trajectory["action"] = trajectory["eef_rl_action"]
     return trajectory
 
 def connector_insert_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
@@ -781,7 +781,7 @@ def connector_insert_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
 
 def rl_place_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     trajectory["observation"]["proprio"] = np.zeros((7))
-    trajectory["action"] = trajectory["base_action"]
+    trajectory["action"] = trajectory["eef_action"]
     return trajectory
 
 def dobbe_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
@@ -917,6 +917,26 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "human_hexagon_place_dataset": rl_place_transform,
     "rl_hexagon_place_dataset": rl_place_transform,
     "rl_hexagon_place_dataset:1.0.0": rl_place_transform,
+    "cucumber_pick_place_rl_dataset": rl_place_transform,
+    "pepper_pick_place_human_dataset": rl_place_transform,
+    "fmb_rl_composition_dataset": rl_place_transform,
+    "fmb_human_composition_dataset": rl_place_transform,
+    "pepper_pick_place_rl_dataset": rl_place_transform,
+    "fmb300_rl_insert_dataset": connector_insert_transform,
+    "fmb150_rl_insert_dataset": connector_insert_transform,
+    "fmb75_rl_insert_dataset": connector_insert_transform,
+    "fmb50_rl_insert_dataset": connector_insert_transform,
+    "fmb25_rl_insert_dataset": connector_insert_transform,
+    "fmb300_human_insert_dataset": connector_insert_transform,
+    "fmb150_human_insert_dataset": connector_insert_transform,
+    "fmb75_human_insert_dataset": connector_insert_transform,
+    "fmb50_human_insert_dataset": connector_insert_transform,
+    "fmb25_human_insert_dataset": connector_insert_transform,
+    "fmb300_relabel_human_insert_dataset": connector_insert_transform,
+    "fmb150_relabel_human_insert_dataset": connector_insert_transform,
+    "fmb75_relabel_human_insert_dataset": connector_insert_transform,
+    "fmb50_relabel_human_insert_dataset": connector_insert_transform,
+    "fmb25_relabel_human_insert_dataset": connector_insert_transform,
     "dobbe": dobbe_dataset_transform,
     "roboset": roboset_dataset_transform,
     "rh20t": rh20t_dataset_transform,
